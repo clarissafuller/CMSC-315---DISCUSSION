@@ -18,53 +18,61 @@ class Stack:
     def __init__(self):
         # TODO (Student): Create the internal data structure for the stack.
         # Hint: A Python list can be used to store stack values.
-        pass
+        self._stack = []
 
     def push(self, value):
         # TODO (Student): Add value to the stack.
         # Add a short comment explaining why this operation supports LIFO behavior.
-        pass
+        self._stack.append(value)
 
     def pop(self):
         # TODO (Student): Remove and return the most recently added value.
         # Improve or explain empty-stack handling.
         # What should happen if the stack is empty?
-        pass
+        if self.is_empty():
+            raise IndexError("pop from empty stack")
+        return self._stack.pop()
 
     def peek(self):
         # TODO (Student): Return the top value without removing it.
         # Add a comment explaining what peek does.
-        pass
+        if self.is_empty():
+            raise IndexError("peek at empty stack")
+        return self._stack[-1]
 
     def is_empty(self):
         # TODO (Student): Return True if the stack has no values.
-        pass
+        return len(self._stack) == 0
 
 
 class Queue:
     def __init__(self):
         # TODO (Student): Create the internal data structure for the queue.
         # Hint: collections.deque is useful for efficient queue operations.
-        pass
+        self._queue = deque()
 
     def enqueue(self, value):
         # TODO (Student): Add value to the back of the queue.
         # Add a short comment explaining why this operation supports FIFO behavior.
-        pass
+        self._queue.append(value)
 
     def dequeue(self):
         # TODO (Student): Remove and return the value from the front of the queue.
         # Explain or improve empty-queue handling.
-        pass
+        if self.is_empty():
+            raise IndexError("dequeue from empty queue")
+        return self._queue.popleft()
 
     def front(self):
         # TODO (Student): Return the front value without removing it.
         # Add a comment explaining what front returns.
-        pass
+        if self.is_empty():
+            raise IndexError("front of empty queue")
+        return self._queue[0]
 
     def is_empty(self):
         # TODO (Student): Return True if the queue has no values.
-        pass
+        return len(self._queue) == 0
 
 
 def main():
@@ -107,11 +115,52 @@ print("      and verify a single-item stack becomes empty after removal.")
 # 7. Create a queue with only one item, remove it,
 #    and verify the queue is empty afterward.
 
-print("\n=== QUEUE DEMO ===")
-print("TODO: Create a Queue object, demonstrate FIFO behavior,")
-print("      test dequeuing from an empty queue,")
-print("      test viewing the front of an empty queue,")
-print("      and verify a single-item queue becomes empty after removal.")
 
+def main():
+    print("\n--- Building the Queue ---")
+    numQueue = Queue()
+    values_to_add = [10, 20, 30, 40]
+ 
+    for value in values_to_add:
+        numQueue.enqueue(value)
+        print(f"Enqueued {value}. Front of queue is now: {numQueue.front()}")
+
+    print("\n--- Demonstrating FIFO (First In, First Out) Behavior ---")
+    print("We added values in this order: 10, 20, 30, 40")
+    print("Because a queue is FIFO, they should come back out in the SAME order.\n")
+ 
+    while not numQueue.is_empty():
+        removed = numQueue.dequeue()
+        print(f"Dequeued: {removed}")
+ 
+    print("All values removed in the order they were added — FIFO confirmed.")
+ 
+    print("\n--- Edge Case: Dequeuing from an Empty Queue ---")
+    print("The queue is currently empty. Attempting to dequeue anyway...")
+    try:
+        numQueue.dequeue()
+    except Exception as e:
+        print(f"As expected, this raised an error: {e}")
+
+    print("\n--- Edge Case: Viewing the Front of an Empty Queue ---")
+    print("The queue is still empty. Attempting to view the front item...")
+    try:
+        numQueue.front()
+    except Exception as e:
+        print(f"As expected, this raised an error: {e}")
+
+    print("\n--- Edge Case: Single-Item Queue ---")
+    singleQueue = Queue()
+    singleQueue.enqueue(99)
+    print(f"Created a new queue and enqueued a single value: 99")
+    print(f"Is the queue empty right now? {singleQueue.is_empty()}")
+ 
+    removed = singleQueue.dequeue()
+    print(f"Dequeued the only item: {removed}")
+    print(f"Is the queue empty now? {singleQueue.is_empty()}")
+ 
+    print("\n=== END OF QUEUE DEMO ===\n")
+ 
+ 
 if __name__ == "__main__":
     main()
