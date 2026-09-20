@@ -21,74 +21,107 @@ def main():
     print("=== UNIT 6: DICTIONARIES AS HASH TABLES ===")
 
     # ===============================
-    # TODO (Student): CREATE A HASH TABLE
+    # CREATE A HASH TABLE
     # ===============================
     #
-    # Requirements:
-    # 1. Create an empty dictionary.
-    # 2. Add at least 5 key-value pairs.
-    # 3. Add comments explaining how a dictionary
-    #    behaves like a hash table.
-    # 4. Display the contents of the dictionary.
+    # A Python dictionary IS a hash table under the hood: each key is
+    # run through a hash function to produce an integer hash code, and
+    # that hash code determines which "bucket" the key-value pair is
+    # stored in internally. This is why dictionary lookups, inserts,
+    # and deletes run in average O(1) time instead of having to scan
+    # every item like a list would.
+    #
+    # Keys must be hashable (immutable types like strings, numbers,
+    # and tuples work; lists and dicts cannot be keys because their
+    # contents - and therefore their hash - could change).
 
+    inventory = {}  # empty dictionary / hash table
+
+    inventory["P100"] = 15
+    inventory["P200"] = 9
+    inventory["P300"] = 42
+    inventory["P400"] = 3
+    inventory["P500"] = 27
 
     print("\n=== INSERT OPERATIONS ===")
-    print("TODO: Create a dictionary and add multiple key-value pairs.")
+    # Each assignment above hashes the string key ("P100", "P200", etc.)
+    # to determine where the pair is stored. Insertion order is not
+    # what determines storage location - the hash value is.
+    print("Dictionary after inserting 5 key-value pairs:")
+    print(inventory)
 
     # ===============================
-    # TODO (Student): LOOKUP OPERATIONS
+    # LOOKUP OPERATIONS
     # ===============================
-    #
-    # Requirements:
-    # 1. Retrieve at least two existing keys.
-    # 2. Clearly display the lookup results.
-    # 3. Add meaningful comments to explain how the lookup works.
-
     print("\n=== LOOKUP OPERATIONS ===")
-    print("TODO: Demonstrate successful key lookups.")
+    # A lookup re-hashes the key and jumps almost directly to the
+    # bucket where the value lives, rather than searching sequentially.
+    print(f"Quantity for P100: {inventory['P100']}")
+    print(f"Quantity for P300: {inventory['P300']}")
 
     # ===============================
-    # TODO (Student): UPDATE OPERATIONS
+    # UPDATE OPERATIONS
     # ===============================
-    #
-    # Requirements:
-    # 1. Update the value associated with an existing key.
-    # 2. Display the dictionary before and after the update.
-    # 3. Use comments to explain what happens when an existing key is assigned
-    #    a new value.
-
     print("\n=== UPDATE OPERATIONS ===")
-    print("TODO: Demonstrate updating an existing key.")
+    print("Dictionary BEFORE update:")
+    print(inventory)
+
+    # Assigning to an existing key does not create a new entry - the
+    # key hashes to the same bucket it already occupies, so the old
+    # value is simply overwritten in place. The dictionary's size
+    # does not change.
+    inventory["P100"] = 50
+
+    print("Dictionary AFTER updating P100 to 50:")
+    print(inventory)
 
     # ===============================
-    # TODO (Student): DELETE OPERATIONS
+    # DELETE OPERATIONS
     # ===============================
-    #
-    # Requirements:
-    # 1. Delete at least one key-value pair.
-    # 2. Display the dictionary before and after deletion.
-    # 3. Use comments to explain what happens when a key is removed.
-
     print("\n=== DELETE OPERATIONS ===")
-    print("TODO: Demonstrate deleting a key-value pair.")
+    print("Dictionary BEFORE deletion:")
+    print(inventory)
+
+    # del removes the key-value pair entirely - the key is un-hashed
+    # from its bucket and the space becomes available for a future
+    # key that happens to hash to the same location.
+    del inventory["P400"]
+
+    print("Dictionary AFTER deleting key 'P400':")
+    print(inventory)
 
     # ===============================
-    # TODO (Student): EDGE CASES
+    # EDGE CASES
     # ===============================
-    #
-    # Demonstrate at least two edge cases.
-    #
-    # Example ideas:
-    # - Lookup a missing key
-    # - Delete a missing key safely
-    # - Update a missing key
-    # - Use an empty dictionary
-    #
-    # Explain what happens in each case.
-
     print("\n=== EDGE CASES ===")
-    print("TODO: Demonstrate and explain edge cases.")
 
+    # Edge case 1: looking up a key that does not exist.
+    # Using [] directly would raise a KeyError, so .get() is used
+    # instead, which returns None (or a default) when the key is
+    # missing rather than crashing the program.
+    missing_lookup = inventory.get("P999")
+    print(f"Lookup missing key 'P999' with .get(): {missing_lookup}")
+
+    # Edge case 2: deleting a key that does not exist.
+    # del on a missing key raises a KeyError, so checking membership
+    # first (or using .pop(key, None)) avoids crashing the program.
+    if "P999" in inventory:
+        del inventory["P999"]
+        print("Deleted 'P999'")
+    else:
+        print("Attempted to delete missing key 'P999' - handled safely, no crash")
+
+    # Edge case 3: updating/inserting into an empty dictionary.
+    # There is no error here - assigning to a new key on an empty
+    # dict simply creates the first entry, same as any other insert.
+    empty_dict = {}
+    empty_dict["NEW1"] = 100
+    print(f"Assigned into an empty dictionary: {empty_dict}")
+
+    # Edge case 4: checking membership on an empty dictionary.
+    # This is always False and never raises an error - it's a safe,
+    # cheap operation regardless of dictionary size.
+    print(f"Is 'ANY_KEY' in empty_dict? {'ANY_KEY' in empty_dict}")
 
 
 if __name__ == "__main__":
